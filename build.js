@@ -44,7 +44,7 @@ builder.build({
             allowToChangeInstallationDirectory: true
         },
         mac: {
-            target: 'dmg',
+            target: 'pkg',
             category: 'public.app-category.games',
             icon: 'build/icon.icns'
         },
