@@ -1,7 +1,7 @@
 {
   "name": "electronlauncher",
-  "version": "1.6.0",
-  "productName": "Electron Launcher",
+  "version": "1.7.1",
+  "productName": "WesterosCraft Launcher",
   "description": "Modded Minecraft Launcher",
   "author": "Daniel Scalzi (https://github.com/dscalzi/)",
   "license": "UNLICENSED",
