@@ -59,7 +59,6 @@ function showMainUI(data){
 
     if(!isDev){
         loggerAutoUpdater.log('Initializing..')
-        ipcRenderer.send('autoUpdateAction', 'initAutoUpdater', ConfigManager.getAllowPrerelease())
     }
 
     prepareSettings(true)

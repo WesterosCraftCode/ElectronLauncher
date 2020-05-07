@@ -47,21 +47,10 @@ if(!isDev){
                 break
             case 'update-available':
                 loggerAutoUpdaterSuccess.log('New update available', info.version)
-                
-                if(process.platform === 'darwin'){
-                    info.darwindownload = `https://github.com/dscalzi/ElectronLauncher/releases/download/v${info.version}/electronlauncher-${info.version}.dmg`
-                    showUpdateUI(info)
-                }
-                
                 populateSettingsUpdateInformation(info)
                 break
             case 'update-downloaded':
                 loggerAutoUpdaterSuccess.log('Update ' + info.version + ' ready to be installed.')
-                settingsUpdateButtonStatus('Install Now', false, () => {
-                    if(!isDev){
-                        ipcRenderer.send('autoUpdateAction', 'installUpdateNow')
-                    }
-                })
                 showUpdateUI(info)
                 break
             case 'update-not-available':

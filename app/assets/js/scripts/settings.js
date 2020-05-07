@@ -1229,7 +1229,6 @@ function populateReleaseNotes(){
  */
 function prepareAboutTab(){
     populateAboutVersionInformation()
-    populateReleaseNotes()
 }
 
 /**
