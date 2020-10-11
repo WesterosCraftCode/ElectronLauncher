@@ -34,7 +34,6 @@ remote.getCurrentWebContents().on('devtools-opened', () => {
 // Disable zoom, needed for darwin.
 webFrame.setZoomLevel(0)
 webFrame.setVisualZoomLevelLimits(1, 1)
-webFrame.setLayoutZoomLevelLimits(0, 0)
 
 // Initialize auto updates in production environments.
 let updateCheckListener
@@ -47,6 +46,12 @@ if(!isDev){
                 break
             case 'update-available':
                 loggerAutoUpdaterSuccess.log('New update available', info.version)
+                
+                if(process.platform === 'darwin'){
+                    info.darwindownload = `https://github.com/dscalzi/HeliosLauncher/releases/download/v${info.version}/helioslauncher-setup-${info.version}.dmg`
+                    showUpdateUI(info)
+                }
+                
                 populateSettingsUpdateInformation(info)
                 break
             case 'update-downloaded':
