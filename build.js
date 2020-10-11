@@ -23,7 +23,7 @@ builder
     ).createTarget(),
     config: {
       appId: 'helioslauncher',
-      productName: 'Helios Launcher',
+      productName: 'WesterosCraft Launcher',
       artifactName: '${productName}-setup-${version}.${ext}',
       copyright: 'Copyright © 2018-2020 Daniel Scalzi',
       directories: {

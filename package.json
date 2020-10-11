@@ -1,7 +1,7 @@
 {
-  "name": "helioslauncher",
+  "name": "westeroscraftlauncher",
   "version": "1.8.0",
-  "productName": "Helios Launcher",
+  "productName": "WesterosCraft Launcher",
   "description": "Modded Minecraft Launcher",
   "author": "Daniel Scalzi (https://github.com/dscalzi/)",
   "license": "UNLICENSED",
@@ -31,6 +31,7 @@
     "ejs": "^3.1.5",
     "ejs-electron": "^2.1.1",
     "electron-updater": "^4.3.4",
+    "fontsource-sen": "^3.0.3",
     "fs-extra": "^9.0.1",
     "github-syntax-dark": "^0.5.0",
     "jquery": "^3.5.1",
