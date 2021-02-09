@@ -1,6 +1,5 @@
 // Requirements
-const {app, BrowserWindow, ipcMain} = require('electron')
-const Menu                          = require('electron').Menu
+const { app, BrowserWindow, ipcMain, Menu } = require('electron')
 const autoUpdater                   = require('electron-updater').autoUpdater
 const ejse                          = require('ejs-electron')
 const fs                            = require('fs')
@@ -22,6 +21,9 @@ ipcMain.on('distributionIndexDone', (event, res) => {
 // https://electronjs.org/docs/tutorial/offscreen-rendering
 app.disableHardwareAcceleration()
 
+// https://github.com/electron/electron/issues/18397
+app.allowRendererProcessReuse = true
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
@@ -36,7 +38,9 @@ function createWindow() {
         webPreferences: {
             preload: path.join(__dirname, 'app', 'assets', 'js', 'preloader.js'),
             nodeIntegration: true,
-            contextIsolation: false
+            contextIsolation: false,
+            enableRemoteModule: true,
+            worldSafeExecuteJavaScript: true
         },
         backgroundColor: '#171614'
     })
@@ -55,7 +59,7 @@ function createWindow() {
 
     win.removeMenu()
 
-    win.setResizable(true)
+    win.resizable = true
 
     win.on('closed', () => {
         win = null
@@ -127,16 +131,19 @@ function createMenu() {
 }
 
 function getPlatformIcon(filename){
-    const opSys = process.platform
-    if (opSys === 'darwin') {
-        filename = filename + '.icns'
-    } else if (opSys === 'win32') {
-        filename = filename + '.ico'
-    } else {
-        filename = filename + '.png'
+    let ext
+    switch(process.platform) {
+        case 'win32':
+            ext = 'ico'
+            break
+        case 'darwin':
+        case 'linux':
+        default:
+            ext = 'png'
+            break
     }
 
-    return path.join(__dirname, 'app', 'assets', 'images', filename)
+    return path.join(__dirname, 'app', 'assets', 'images', `${filename}.${ext}`)
 }
 
 app.on('ready', createWindow)

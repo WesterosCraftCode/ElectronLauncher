@@ -42,15 +42,34 @@ bindSettingsSelect()
 
 
 function bindFileSelectors(){
-    for(let ele of document.getElementsByClassName('settingsFileSelSel')){
-        if(ele.id === 'settingsJavaExecSel'){
-            ele.onchange = (e) => {
-                ele.previousElementSibling.value = ele.files[0].path
-                populateJavaExecDetails(ele.previousElementSibling.value)
+    for(let ele of document.getElementsByClassName('settingsFileSelButton')){
+        
+        ele.onclick = async e => {
+            const isJavaExecSel = ele.id === 'settingsJavaExecSel'
+            const directoryDialog = ele.hasAttribute('dialogDirectory') && ele.getAttribute('dialogDirectory') == 'true'
+            const properties = directoryDialog ? ['openDirectory', 'createDirectory'] : ['openFile']
+
+            const options = {
+                properties
             }
-        } else {
-            ele.onchange = (e) => {
-                ele.previousElementSibling.value = ele.files[0].path
+
+            if(ele.hasAttribute('dialogTitle')) {
+                options.title = ele.getAttribute('dialogTitle')
+            }
+
+            if(isJavaExecSel && process.platform === 'win32') {
+                options.filters = [
+                    { name: 'Executables', extensions: ['exe'] },
+                    { name: 'All Files', extensions: ['*'] }
+                ]
+            }
+
+            const res = await remote.dialog.showOpenDialog(remote.getCurrentWindow(), options)
+            if(!res.canceled) {
+                ele.previousElementSibling.value = res.filePaths[0]
+                if(isJavaExecSel) {
+                    populateJavaExecDetails(ele.previousElementSibling.value)
+                }
             }
         }
     }
@@ -694,7 +713,7 @@ function bindDropinModFileSystemButton(){
     const fsBtn = document.getElementById('settingsDropinFileSystemButton')
     fsBtn.onclick = () => {
         DropinModUtil.validateDir(CACHE_SETTINGS_MODS_DIR)
-        shell.openItem(CACHE_SETTINGS_MODS_DIR)
+        shell.openPath(CACHE_SETTINGS_MODS_DIR)
     }
     fsBtn.ondragenter = e => {
         e.dataTransfer.dropEffect = 'move'
@@ -818,7 +837,7 @@ function bindShaderpackButton() {
     spBtn.onclick = () => {
         const p = path.join(CACHE_SETTINGS_INSTANCE_DIR, 'shaderpacks')
         DropinModUtil.validateDir(p)
-        shell.openItem(p)
+        shell.openPath(p)
     }
     spBtn.ondragenter = e => {
         e.dataTransfer.dropEffect = 'move'
@@ -1120,10 +1139,11 @@ function populateJavaExecDetails(execPath){
     const jg = new JavaGuard(DistroManager.getDistribution().getServer(ConfigManager.getSelectedServer()).getMinecraftVersion())
     jg._validateJavaBinary(execPath).then(v => {
         if(v.valid){
+            const vendor = v.vendor != null ? ` (${v.vendor})` : ''
             if(v.version.major < 9) {
-                settingsJavaExecDetails.innerHTML = `Selected: Java ${v.version.major} Update ${v.version.update} (x${v.arch})`
+                settingsJavaExecDetails.innerHTML = `Selected: Java ${v.version.major} Update ${v.version.update} (x${v.arch})${vendor}`
             } else {
-                settingsJavaExecDetails.innerHTML = `Selected: Java ${v.version.major}.${v.version.minor}.${v.version.revision} (x${v.arch})`
+                settingsJavaExecDetails.innerHTML = `Selected: Java ${v.version.major}.${v.version.minor}.${v.version.revision} (x${v.arch})${vendor}`
             }
         } else {
             settingsJavaExecDetails.innerHTML = 'Invalid Selection'
@@ -1200,7 +1220,7 @@ function populateAboutVersionInformation(){
  */
 function populateReleaseNotes(){
     $.ajax({
-        url: 'https://github.com/dscalzi/ElectronLauncher/releases.atom',
+        url: 'https://github.com/dscalzi/HeliosLauncher/releases.atom',
         success: (data) => {
             const version = 'v' + remote.app.getVersion()
             const entries = $(data).find('entry')

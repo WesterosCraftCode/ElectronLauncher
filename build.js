@@ -18,10 +18,10 @@ function getCurrentPlatform(){
 builder.build({
     targets: (process.argv[2] != null && Platform[process.argv[2]] != null ? Platform[process.argv[2]] : getCurrentPlatform()).createTarget(),
     config: {
-        appId: 'electronlauncher',
+        appId: 'westeroscraftlauncher',
         productName: 'WesterosCraft Launcher',
-        artifactName: '${productName}.${ext}',
-        copyright: 'Copyright © 2018-2019 Daniel Scalzi',
+        artifactName: '${productName}-setup-${version}.${ext}',
+        copyright: 'Copyright © 2018-2021 Daniel Scalzi',
         directories: {
             buildResources: 'build',
             output: 'dist'
@@ -32,21 +32,17 @@ builder.build({
                     target: 'nsis',
                     arch: 'x64'
                 }
-            ],
-            icon: 'build/icon.ico'
+            ]
         },
         nsis: {
             oneClick: false,
-            perMachine: true,
+            perMachine: false,
             allowElevation: true,
-            installerIcon: 'build/icon.ico',
-            uninstallerIcon: 'build/icon.ico',
             allowToChangeInstallationDirectory: true
         },
         mac: {
-            target: 'pkg',
-            category: 'public.app-category.games',
-            icon: 'build/icon.icns'
+            target: 'dmg',
+            category: 'public.app-category.games'
         },
         linux: {
             target: 'AppImage',
